@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProdutoRepository } from './produto.repository';
 import { CriarProdutoBodyDto } from './dto/criar-produto-body.dto';
 import { CriarProdutoDto } from './dto/criar-produto.dto';
-import { Foto } from 'src/fotos/foto.entity';
+import { Foto } from '../fotos/foto.entity';
 import { Produto } from './produto.entity';
-import { FotosRepository } from 'src/fotos/fotos.repository';
+import { FotosRepository } from '../fotos/fotos.repository';
 import { QueryProdutoDto } from './dto/query-produto.dto';
 
 @Injectable()
@@ -37,7 +37,9 @@ export class ProdutoService {
     }
 
     async getProduto(id: number): Promise<Produto> {
-        return this.produtoRepository.findOne(id);
+        const produto = await this.produtoRepository.findOne(id)
+        if (!produto) throw new NotFoundException('Produto não encontrado');
+        return produto;
     }
 
 }
