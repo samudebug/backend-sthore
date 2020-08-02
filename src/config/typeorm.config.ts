@@ -5,9 +5,9 @@ export function getTypeOrmModuleOptions(env: string): TypeOrmModuleOptions {
             type: 'postgres',
             host: 'localhost',
             port: 5432,
-            username: 'pguser',
-            password: 'pgpassword',
-            database: 'loja_shtorm',
+            username: process.env.PGUSER,
+            password: process.env.PGPASS,
+            database: process.env.PGDB,
             entities: [__dirname + '/../**/*.entity.{js,ts}'],
             synchronize: true
         }
@@ -18,9 +18,9 @@ export function getTypeOrmModuleOptions(env: string): TypeOrmModuleOptions {
             type: 'postgres',
             host: 'localhost',
             port: 5432,
-            username: 'pguser',
-            password: 'pgpassword',
-            database: 'sthore_test',
+            username: process.env.PGUSER,
+            password: process.env.PGPASS,
+            database: process.env.PGDB,
             entities: [__dirname + '/../**/*.entity.{js,ts}'],
             synchronize: true
         }   
