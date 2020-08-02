@@ -25,4 +25,18 @@ export function getTypeOrmModuleOptions(env: string): TypeOrmModuleOptions {
             synchronize: true
         }   
     }
+
+    if (env==='PROD') {
+        return {
+            dropSchema: true,
+            type: 'postgres',
+            host: process.env.DATABASE_HOST,
+            port: parseInt(process.env.DATABASE_PORT),
+            username: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASS,
+            database: process.env.DATABASE_NAME,
+            entities: [__dirname + '/../**/*.entity.{js,ts}'],
+            synchronize: true
+        } 
+    }
 }
