@@ -1,6 +1,6 @@
 #! /bin/sh
 export NODE_ENV="TEST"
-npm run test:cov
+npm run test:cov 
 
 docker exec -i -t pgsql psql postgres -U pguser -c "CREATE DATABASE sthore_test"
 npm run test:e2e
