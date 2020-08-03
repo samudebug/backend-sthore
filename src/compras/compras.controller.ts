@@ -17,10 +17,4 @@ export class ComprasController {
     async consultarCompra(@Param('orderId') orderId:string): Promise<{valor: number, status: string}> {
         return this.comprasService.getCompra(orderId);
     }
-
-    @Get()
-    async getCompras(): Promise<Compra[]> {
-        return this.comprasService.getCompras();
-    }
-
 }

@@ -125,9 +125,4 @@ export class ComprasService {
         }
     }
 
-    public async getCompras(): Promise<Compra[]> {
-        const query = this.comprasRepository.createQueryBuilder('compras');
-        const compras = query.getMany();
-        return compras;
-    }
 }
