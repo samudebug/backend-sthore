@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CompraBodyDto } from './dto/compra-body.dto';
 import { ComprasService } from './compras.service';
+import { Compra } from './compra.entity';
 
 @Controller('compras')
 export class ComprasController {
@@ -15,6 +16,11 @@ export class ComprasController {
     @Get(':orderId')
     async consultarCompra(@Param('orderId') orderId:string): Promise<{valor: number, status: string}> {
         return this.comprasService.getCompra(orderId);
+    }
+
+    @Get()
+    async getCompras(): Promise<Compra[]> {
+        return this.comprasService.getCompras();
     }
 
 }

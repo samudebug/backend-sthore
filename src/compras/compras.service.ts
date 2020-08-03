@@ -6,6 +6,7 @@ import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands,
 import * as crypto from 'crypto';
 import { ProdutoRepository } from '../produto/produto.repository';
 import { SalvarCompraDto } from './dto/salvar-compra.dto';
+import { Compra } from './compra.entity';
 
 
 @Injectable()
@@ -63,7 +64,7 @@ export class ComprasService {
             return produto;
         }));
         if (produtos.some((el) => {
-            return el === null;
+            return el === undefined;
         })) {
             throw new NotFoundException(`Produto inválido!`);
         }
@@ -97,8 +98,8 @@ export class ComprasService {
             emailCliente: compraBodyDto.cliente.email,
             compraCode: orderId
         }
-        await this.comprasRepository.salvarCompra(salvarCompraDto);
-        this.capturarCompra(paymentId);
+        const compra = await this.comprasRepository.salvarCompra(salvarCompraDto);
+        // this.capturarCompra(paymentId); //Simulação para mandar para o email
         return { message: 'Operação realizada com sucesso', code: orderId };
     }
 
@@ -122,5 +123,11 @@ export class ComprasService {
             valor: compraInfo.payment.amount/100,
             status
         }
+    }
+
+    public async getCompras(): Promise<Compra[]> {
+        const query = this.comprasRepository.createQueryBuilder('compras');
+        const compras = query.getMany();
+        return compras;
     }
 }

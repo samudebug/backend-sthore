@@ -14,7 +14,7 @@ export class ComprasRepository extends Repository<Compra> {
         compra.produtos = salvarCompraDto.produtos;
         compra.orderCode = salvarCompraDto.compraCode;
         try {
-            compra.save()
+            await compra.save()
             return compra;
         } catch(error) {
             throw new InternalServerErrorException('Ocorreu um erro ao salvar no banco de dados');
