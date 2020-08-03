@@ -4,9 +4,8 @@ import { ComprasRepository } from './compras.repository';
 import { CompraBodyDto } from './dto/compra-body.dto';
 import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands, EnumCardType } from 'cielo';
 import * as crypto from 'crypto';
-import { ProdutoRepository } from 'src/produto/produto.repository';
+import { ProdutoRepository } from '../produto/produto.repository';
 import { SalvarCompraDto } from './dto/salvar-compra.dto';
-import { stat } from 'fs';
 
 
 @Injectable()
@@ -61,9 +60,13 @@ export class ComprasService {
         const orderId = crypto.randomBytes(3).toString('hex');
         const produtos = await Promise.all(compraBodyDto.produtos.map(async (produtoId) => {
             const produto = await this.produtoRepository.findOne(produtoId);
-            if (!produto) throw new NotFoundException(`Produto inválido! id: ${produtoId}`);
             return produto;
         }));
+        if (produtos.some((el) => {
+            return el === null;
+        })) {
+            throw new NotFoundException(`Produto inválido!`);
+        }
         const vendaParams: TransactionCreditCardRequestModel = {
             customer: {
                 name: compraBodyDto.cliente.nome
@@ -75,7 +78,8 @@ export class ComprasService {
                     brand: this.getBrand(compraBodyDto.pagamento.bandeira),
                     cardNumber: compraBodyDto.pagamento.numero,
                     holder: compraBodyDto.pagamento.titular,
-                    expirationDate: compraBodyDto.pagamento.validade
+                    expirationDate: compraBodyDto.pagamento.validade,
+                    securityCode: compraBodyDto.pagamento.cvv
                 },
                 installments: 1,
                 softDescriptor: 'Sthore',
@@ -100,6 +104,7 @@ export class ComprasService {
 
     public async getCompra(orderId: string): Promise<{valor: number, status: string}> {
         const compra = await this.comprasRepository.findOne({where: {orderCode: orderId}});
+        if (!compra) throw new NotFoundException('Compra não encontrada');
         const compraInfo = await this.cielo.consult.paymentId({paymentId: compra.paymentId});
         let status = '';
         switch(compraInfo.payment.status) {
