@@ -1,75 +1,185 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Sthore
 
-## Description
+### Descrição
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API de loja online feita para o desafio da Sthorm, integrada com o API E-Commerce da Cielo.
 
-## Installation
+### Instalação
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+Instale o Docker, depois rode:
 
 ```bash
-# development
+$ docker-compose up -d
+```
+
+Use o adminer (`http://localhost:8080`) para criar uma base da dados. As credenciais padrões são:
+
+```
+Servidor: pgsql
+Usuário: pguser
+Senha: pgpassword
+```
+
+Após criar uma base de dados, coloque o nome dela em uma variável de ambiente chamada `PGDB`
+
+Ex:
+```bash
+$ export PGDB="db_dev"
+```
+
+### Executando
+
+```bash
+# para desenvolvimento
 $ npm run start
 
-# watch mode
+# a cada alteração em arquivos, ele recarrega a aplicação
 $ npm run start:dev
 
-# production mode
+# modo em produção
 $ npm run start:prod
 ```
 
-## Test
+### Testes
 
 ```bash
-# unit tests
+# testes unitários
 $ npm run test
 
-# e2e tests
+# testes de integração
 $ npm run test:e2e
 
-# test coverage
+# coverage dos testes
 $ npm run test:cov
 ```
 
-## Support
+### Exemplo rodando
+Você pode usar ela rodando em:
+`https://desafio-sthore.herokuapp.com/`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Endpoints
 
-## Stay in touch
+`#### GET /produto?limit=25&page=1`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Retorna: Lista dos produtos cadastrados
+Código: 200
+Query: `limit`: Quantidade de elementos por página. Máx: 25; Padrão: 25
+       `page`: Página de produtos. Padrão: 1
+Detalhes do retorno:
 
-## License
+Campo | Tipo
+----- | ----
+produtos | Array de Produto
+total | Inteiro. Quantidade total de produtos armazenados
 
-  Nest is [MIT licensed](LICENSE).
+##### Produto
+
+Campo | Tipo
+----- | ----
+id | Inteiro. Identificador do produto
+nome | String. Nome do produto
+descricao | String. Descrição do produto
+preco | Double. Valor do produto (em R$)
+fotos | Array de Foto
+
+##### Foto
+
+Campo | Tipo
+----- | ----
+id | Inteiro. Identificador da foto
+linkFoto | String. Link da foto para ser exibida.
+
+`### GET /produto/:id`
+Retorna: Detalhes do produto especificado
+Código: 200
+Parâmetros: `id`: Identificador do produto
+Detalhes do retorno:
+Campo | Tipo
+----- | ----
+id | Inteiro. Identificador do produto
+nome | String. Nome do produto
+descricao | String. Descrição do produto
+preco | Double. Valor do produto (em R$)
+fotos | Array de Foto
+
+Caso o `id` seja inválido, retorna: 404
+
+`### POST /produto`
+Retorna: Detalhes do produto criado
+Código: 201
+Corpo:
+Campo | Tipo
+----- | ----
+nome | String. Nome do produto
+descricao | String. Descrição do produto
+preco | Double. Valor do produto (em R$)
+fotos | Array de Strings com os links das fotos
+
+Caso algum dado seja inválido, ou algum outro erro, retorna: 500
+
+Detalhes do retorno:
+Campo | Tipo
+----- | ----
+id | Inteiro. Identificador do produto
+nome | String. Nome do produto
+descricao | String. Descrição do produto
+preco | Double. Valor do produto (em R$)
+fotos | Array de Foto
+
+
+`### GET /compras/:orderCod`
+Retorna: Status do pagamento da compra
+Código: 200
+Parâmetros: `orderId`: Código de 6 caracteres que identifica a compra
+
+Caso o `orderId` seja inválido, retorna: 404
+
+Detalhes do retorno:
+Campo | Tipo
+----- | ----
+valor | Double. Valor total da compra
+status | String. Status da Compra (Aguardando, Confirmada ou Finalizada)
+
+`### POST /compras`
+Retorna: Código de 6 caracteres da compra criada
+Código: 201
+Corpo:
+Campo | Tipo
+----- | ----
+cliente | Objeto. Informações do Cliente
+pagamento | Objeto. Informações do Cartão de Crédito para pagamento
+valorTotal | Double. Valor total da compra
+produtos | Array de Inteiros com os ids dos Produtos
+
+Caso algum dos produtos informados não exista, retorna: 404
+Caso algum dos dados de pagamento seja inválido, retorna: 401
+
+Detalhes do retorno:
+Campo | Tipo
+----- | ----
+mensagem | String. Mensagem informando sucesso
+code | String. Código de 6 dígitos para identificar a compra
+
+
+##### Cliente
+
+Campo | Tipo
+----- | ----
+nome | String. Nome completo do Cliente
+telefone | String. Telefone do Cliente
+email | String. Email do Cliente
+endereco | String. Endereço do Cliente
+
+##### Pagamento
+
+Campo | Tipo
+----- | ----
+bandeira | String. Bandeira do Cartão de Crédito ('visa', 'master', 'discovery', 'elo', 'jcb', 'amex', 'aura', 'hipercard', 'diners')
+numero | String. Número do Cartão de Crédito
+validade | String. Validade do Cartão de Crédito ('MM/YYYY')
+titular | String. Titular do Cartão de Crédito
