@@ -64,7 +64,7 @@ Você pode usar ela rodando em:
 
 ### Endpoints
 
-`#### GET /produto?limit=25&page=1`
+`GET /produto?limit=25&page=1`
 
 Retorna: Lista dos produtos cadastrados
 Código: 200
@@ -94,7 +94,7 @@ Campo | Tipo
 id | Inteiro. Identificador da foto
 linkFoto | String. Link da foto para ser exibida.
 
-`### GET /produto/:id`
+`GET /produto/:id`
 Retorna: Detalhes do produto especificado
 Código: 200
 Parâmetros: `id`: Identificador do produto
@@ -109,7 +109,7 @@ fotos | Array de Foto
 
 Caso o `id` seja inválido, retorna: 404
 
-`### POST /produto`
+`POST /produto`
 Retorna: Detalhes do produto criado
 Código: 201
 Corpo:
@@ -132,7 +132,7 @@ preco | Double. Valor do produto (em R$)
 fotos | Array de Foto
 
 
-`### GET /compras/:orderCod`
+`GET /compras/:orderCod`
 Retorna: Status do pagamento da compra
 Código: 200
 Parâmetros: `orderId`: Código de 6 caracteres que identifica a compra
@@ -145,7 +145,7 @@ Campo | Tipo
 valor | Double. Valor total da compra
 status | String. Status da Compra (Aguardando, Confirmada ou Finalizada)
 
-`### POST /compras`
+`POST /compras`
 Retorna: Código de 6 caracteres da compra criada
 Código: 201
 Corpo:
